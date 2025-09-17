@@ -1,0 +1,8 @@
+{
+  "groups": {
+    "-1003093531360": "custom message here"
+  },
+  "regular_message": "Auto update msg will be here",
+  "broadcasts_enabled": true,
+  "interval_seconds": 420
+}
