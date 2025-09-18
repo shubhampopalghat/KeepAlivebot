@@ -493,15 +493,15 @@ async def post_init(app: Application) -> None:
 def main():
     cfg = ensure_config()
     storage = Storage(STATE_PATH)
-    # Load state once using a temporary loop
-    asyncio.run(storage.load())
+    # Create and set an event loop BEFORE building the application so that
+    # APScheduler (used by PTB's JobQueue) can find a current loop.
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    # Load state using this loop
+    loop.run_until_complete(storage.load())
 
     app = build_application(cfg, storage)
     logger.info("Bot starting...")
-
-    # Ensure there is a current event loop for PTB run_polling (Py 3.13)
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
 
     try:
         app.run_polling(
